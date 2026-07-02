@@ -1,0 +1,35 @@
+---
+const pathname = Astro.url.pathname;
+
+function isActive(path) {
+  if (path === "/") return pathname === "/";
+  return pathname.startsWith(path);
+}
+---
+
+<header class="site-header">
+
+  <a href="/" class="brand-mark">
+    MYSAL
+  </a>
+
+  <div class="header-text">
+    <h1>MYSAL STATS</h1>
+    <p>PLAYER STATISTICS</p>
+  </div>
+
+</header>
+
+<nav class="nav">
+
+  <a class={isActive("/") ? "active" : ""} href="/">HOME</a>
+
+  <a class={isActive("/goal-ranking") ? "active" : ""} href="/goal-ranking">GOALS</a>
+
+  <a class={isActive("/goal-rate") ? "active" : ""} href="/goal-rate">RATE</a>
+
+  <a class={isActive("/mom-ranking") ? "active" : ""} href="/mom-ranking">MOM</a>
+
+  <a class={isActive("/players") ? "active" : ""} href="/players">PLAYERS</a>
+
+</nav>

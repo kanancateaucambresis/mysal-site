@@ -1,0 +1,124 @@
+---
+import "../styles/global.css";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import { getPlayers } from "../lib/players.js";
+
+const players = await getPlayers();
+
+const goalRanking = [...players]
+  .sort((a, b) => b.goals - a.goals)
+  .slice(0, 5);
+
+const topScorer = goalRanking[0];
+
+const latestMom =
+  players.find((player) => player.latestMom) ||
+  [...players].sort((a, b) => b.mom - a.mom)[0];
+
+function imagePath(player) {
+  return player.photo
+    ? `/players/${player.photo}`
+    : "/players/placeholder-player.webp";
+}
+
+function isLegend(player) {
+  return player.rank?.toLowerCase() === "legend";
+}
+---
+
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MYSAL STATS</title>
+</head>
+
+<body>
+<main class="container">
+
+  <Header />
+
+  <a class={`hero-link ${isLegend(topScorer) ? "is-legend" : ""}`} href={`/player/${topScorer.id}`}>
+    <section class="hero">
+      <div class="hero-meta">JULY 2026</div>
+
+      <div class="hero-copy">
+        <p class="eyebrow">TOP SCORER</p>
+
+        <div class="big-number">{topScorer.goals}</div>
+        <p class="unit">GOALS</p>
+
+        <img
+          class="hero-image"
+          src={imagePath(topScorer)}
+          alt={topScorer.name}
+          onerror="this.src='/players/placeholder-player.webp'"
+        />
+
+        <div class="hero-name-area">
+          <h2>{topScorer.name}</h2>
+          <p>{topScorer.id} ｜ {topScorer.rank.toUpperCase()}</p>
+        </div>
+      </div>
+    </section>
+  </a>
+
+  <section class="stats-strip">
+    <div><span>GAMES</span><strong>{topScorer.matches}</strong></div>
+    <div><span>RATE</span><strong>{topScorer.rate.toFixed(2)}</strong></div>
+    <div><span>MOM</span><strong>{topScorer.mom}</strong></div>
+  </section>
+
+  <a class={`mom-card ${isLegend(latestMom) ? "is-legend" : ""}`} href={`/player/${latestMom.id}`}>
+    <div>
+      <p class="mom-label">LATEST MOM</p>
+      <h2>{latestMom.name}</h2>
+      <span>{latestMom.id} ｜ {latestMom.rank.toUpperCase()}</span>
+    </div>
+
+    <img
+      src={imagePath(latestMom)}
+      alt={latestMom.name}
+      onerror="this.src='/players/placeholder-player.webp'"
+    />
+  </a>
+
+  <section class="ranking-section">
+    <div class="section-head">
+      <h2>GOAL RANKING</h2>
+      <a href="/goal-ranking">VIEW ALL</a>
+    </div>
+
+    <div class="ranking-list">
+      {goalRanking.map((player,index)=>(
+        <a class={`ranking-row ${isLegend(player) ? "is-legend" : ""}`} href={`/player/${player.id}`}>
+          <div class="rank">{String(index+1).padStart(2,"0")}</div>
+
+          <img
+            class="avatar"
+            src={imagePath(player)}
+            alt={player.name}
+            onerror="this.src='/players/placeholder-player.webp'"
+          />
+
+          <div class="name-area">
+            <strong>{player.name}</strong>
+            <span>{player.id} ｜ {player.rank.toUpperCase()}</span>
+          </div>
+
+          <div class="goals">
+            <strong>{player.goals}</strong>
+            <span>GOALS</span>
+          </div>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <Footer />
+
+</main>
+</body>
+</html>

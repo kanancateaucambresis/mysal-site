@@ -1,0 +1,517 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --blue: #2563eb;
+  --black: #050505;
+  --gray: #f6f6f6;
+  --line: #e7e7e7;
+  --muted: #777;
+  --legend: #9a7a2f;
+  --member: #2563eb;
+  --rookie: #888;
+}
+
+body {
+  background: var(--gray);
+  color: var(--black);
+  font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.container {
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 24px 16px 48px;
+}
+
+.site-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.brand-mark {
+  width: 52px;
+  height: 52px;
+  border: 2px solid var(--black);
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 10px;
+  font-weight: 950;
+  background: #fff;
+}
+
+.site-header h1 {
+  font-size: 30px;
+  font-weight: 950;
+  letter-spacing: -1.2px;
+}
+
+.site-header p {
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 850;
+  letter-spacing: 2px;
+}
+
+.nav {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 7px;
+  margin-bottom: 28px;
+}
+
+.nav a {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 10px 0;
+  text-align: center;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: .08em;
+  color: #333;
+}
+
+.nav a.active,
+.nav a:hover {
+  background: var(--blue);
+  color: #fff;
+  border-color: var(--blue);
+}
+
+.hero-link {
+  display: block;
+}
+
+.hero {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 30px;
+  padding: 26px 22px 30px;
+  box-shadow: 0 20px 50px rgba(0,0,0,.065);
+}
+
+.hero-meta {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 2px;
+  margin-bottom: 22px;
+}
+
+.eyebrow {
+  color: var(--blue);
+  font-size: 17px;
+  font-weight: 950;
+  margin-bottom: 12px;
+}
+
+.big-number {
+  font-family: Futura, "Avenir Next", "Helvetica Neue", Arial, sans-serif;
+  font-size: 130px;
+  line-height: .78;
+  font-weight: 950;
+  font-style: italic;
+  letter-spacing: -9px;
+}
+
+.unit {
+  margin-top: 18px;
+  font-size: 26px;
+  font-weight: 950;
+}
+
+.hero-image {
+  display: block;
+  width: 210px;
+  height: 210px;
+  margin: 30px auto 0;
+  object-fit: cover;
+  border-radius: 50%;
+  filter: grayscale(100%);
+  background: #ededed;
+}
+
+.hero-name-area {
+  margin-top: 26px;
+  border-top: 1px solid var(--line);
+  padding-top: 20px;
+}
+
+.hero-name-area h2 {
+  font-size: 34px;
+  font-weight: 950;
+}
+
+.hero-name-area p {
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 850;
+}
+
+.stats-strip {
+  margin: 16px 0 34px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.stats-strip div {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 16px 8px;
+  text-align: center;
+}
+
+.stats-strip span {
+  display: block;
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 900;
+}
+
+.stats-strip strong {
+  display: block;
+  margin-top: 6px;
+  font-family: Futura, "Avenir Next", Arial, sans-serif;
+  font-size: 31px;
+  font-style: italic;
+  font-weight: 950;
+}
+
+.mom-card {
+  margin-bottom: 34px;
+  padding: 22px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 26px;
+  box-shadow: 0 18px 42px rgba(0,0,0,.05);
+}
+
+.mom-label {
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: .18em;
+  color: var(--blue);
+  margin-bottom: 10px;
+}
+
+.mom-card h2 {
+  font-size: 28px;
+  font-weight: 900;
+}
+
+.mom-card span {
+  font-size: 12px;
+  font-weight: 800;
+  color: #777;
+}
+
+.mom-card img {
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  object-fit: cover;
+  filter: grayscale(100%);
+  background: #eee;
+}
+
+.section-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 14px;
+}
+
+.section-head h2 {
+  font-size: 30px;
+  font-weight: 950;
+}
+
+.section-head a,
+.section-head span {
+  color: var(--blue);
+  font-size: 13px;
+  font-weight: 950;
+}
+
+.ranking-list,
+.player-index-list {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 18px 42px rgba(0,0,0,.05);
+}
+
+.ranking-row {
+  display: grid;
+  grid-template-columns: 48px 54px 1fr 78px;
+  align-items: center;
+  gap: 10px;
+  min-height: 84px;
+  padding: 0 14px;
+  border-bottom: 1px solid #eee;
+}
+
+.ranking-row:last-child,
+.player-index-row:last-child {
+  border-bottom: none;
+}
+
+.rank {
+  color: #b8b8b8;
+  font-family: Futura, "Avenir Next", Arial, sans-serif;
+  font-size: 32px;
+  font-weight: 950;
+  font-style: italic;
+}
+
+.avatar {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 50%;
+  filter: grayscale(100%);
+  background: #eee;
+}
+
+.name-area strong {
+  display: block;
+  font-size: 17px;
+  font-weight: 900;
+}
+
+.name-area span {
+  display: block;
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 850;
+}
+
+.goals {
+  text-align: right;
+}
+
+.goals strong {
+  display: block;
+  font-family: Futura, "Avenir Next", Arial, sans-serif;
+  font-size: 38px;
+  font-weight: 950;
+  font-style: italic;
+  line-height: 1;
+}
+
+.goals span {
+  display: block;
+  color: var(--blue);
+  font-size: 11px;
+  font-weight: 950;
+}
+
+/* Player Index */
+
+.player-index-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 22px;
+}
+
+.player-index-header h2 {
+  font-size: 30px;
+  font-weight: 950;
+}
+
+.player-index-header span {
+  color: var(--blue);
+  font-size: 13px;
+  font-weight: 950;
+}
+
+.player-group {
+  margin-bottom: 30px;
+}
+
+.player-group-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 10px;
+}
+
+.player-group-head h2 {
+  font-size: 24px;
+  font-weight: 950;
+}
+
+.player-group-head span {
+  color: var(--blue);
+  font-size: 12px;
+  font-weight: 950;
+}
+
+.player-index-row {
+  display: grid;
+  grid-template-columns: 56px 1fr 24px;
+  align-items: center;
+  gap: 18px;
+  min-height: 82px;
+  padding: 14px 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.player-index-row.rank-legend {
+  background: linear-gradient(90deg, #fff 0%, #fffaf0 100%);
+}
+
+.player-index-row.rank-member {
+  background: #fff;
+}
+
+.player-index-row.rank-rookie {
+  background: #fcfcfc;
+}
+
+.player-index-row.rank-legend .player-meta {
+  color: var(--legend);
+}
+
+.player-index-row.rank-member .player-meta {
+  color: var(--member);
+}
+
+.player-index-row.rank-rookie .player-meta {
+  color: var(--rookie);
+}
+
+.player-name {
+  font-size: 19px;
+  font-weight: 900;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.player-meta {
+  margin-top: 5px;
+  display: flex;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 850;
+  letter-spacing: .06em;
+}
+
+.arrow {
+  text-align: right;
+  font-size: 24px;
+  color: #bbb;
+}
+
+.is-legend .hero-image,
+.is-legend .avatar,
+.mom-card.is-legend img {
+  background: #f4ead0;
+}
+
+.hero-link.is-legend .hero,
+.mom-card.is-legend,
+.ranking-row.is-legend {
+  background: linear-gradient(90deg, #fff 0%, #fffaf0 100%);
+}
+
+.ranking-row.is-legend .name-area span,
+.hero-link.is-legend .hero-name-area p,
+.mom-card.is-legend span {
+  color: #9a7a2f;
+}
+
+.back-home {
+  margin: 36px 0 10px;
+  text-align: center;
+}
+
+.back-home a {
+  color: #666;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: .12em;
+}
+
+.back-home a::before {
+  content: "← ";
+}
+
+footer {
+  margin-top: 40px;
+  text-align: center;
+}
+
+footer strong {
+  display: block;
+  font-size: 13px;
+  font-weight: 850;
+  letter-spacing: .08em;
+}
+
+footer span {
+  display: block;
+  margin-top: 9px;
+  font-family: "Hiragino Mincho ProN", "Yu Mincho", serif;
+  font-size: 13px;
+  color: #555;
+  letter-spacing: .08em;
+}
+
+@media (max-width: 390px) {
+  .big-number {
+    font-size: 120px;
+  }
+
+  .hero-image {
+    width: 190px;
+    height: 190px;
+  }
+
+  .hero-name-area h2 {
+    font-size: 32px;
+  }
+
+  .section-head h2,
+  .player-index-header h2 {
+    font-size: 27px;
+  }
+
+  .nav a {
+    font-size: 9px;
+  }
+
+  .player-index-row {
+    grid-template-columns: 52px 1fr 20px;
+    gap: 14px;
+    padding: 13px 16px;
+    min-height: 78px;
+  }
+
+  .player-name {
+    font-size: 18px;
+  }
+}
