@@ -4,16 +4,15 @@ import Header from "../../components/Header.astro";
 import Footer from "../../components/Footer.astro";
 import { getPlayers } from "../../lib/players.js";
 
-export async function getStaticPaths() {
-  const players = await getPlayers();
+const players = await getPlayers();
 
-  return players.map((player) => ({
-    params: { id: player.id },
-    props: { player, players },
-  }));
+const { id } = Astro.params;
+
+const player = players.find((p) => p.id === id);
+
+if (!player) {
+  return Astro.redirect("/players");
 }
-
-const { player, players } = Astro.props;
 
 function imagePath(player) {
   return player.photo
@@ -93,19 +92,19 @@ const momRank = getRank(players, player, "mom");
     </div>
   </section>
 
-  <section class="stats-strip" style="margin-bottom: 16px;">
+  <section class="stats-strip" style="margin-bottom:16px;">
     <div><span>GAMES</span><strong>{player.matches}</strong></div>
     <div><span>GOALS</span><strong>{player.goals}</strong></div>
     <div><span>RATE</span><strong>{player.rate.toFixed(2)}</strong></div>
   </section>
 
-  <section class="stats-strip" style="margin-top: 0; margin-bottom: 16px;">
+  <section class="stats-strip" style="margin-bottom:16px;">
     <div><span>APPEARANCES</span><strong>{player.total}</strong></div>
     <div><span>MOM</span><strong>{player.mom}</strong></div>
     <div><span>RANK</span><strong style="font-size:22px;">{player.rank}</strong></div>
   </section>
 
-  <section class="stats-strip" style="margin-top: 0;">
+  <section class="stats-strip">
     <div><span>GOAL RANK</span><strong>{goalRank}</strong></div>
     <div><span>RATE RANK</span><strong>{rateRank}</strong></div>
     <div><span>MOM RANK</span><strong>{momRank}</strong></div>
