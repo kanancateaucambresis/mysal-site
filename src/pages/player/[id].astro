@@ -120,7 +120,9 @@ const bestRecord = bestRecords.sort((a, b) => a.rank - b.rank)[0];
       <div class="stat-card">
         <span class="stat-label">GOALS</span>
         <div class="stat-value">{player.goals}</div>
-        <div class="stat-rank">RANK {goalRank} / {totalPlayers}</div>
+        <div class="stat-rank">
+          RANK {player.goals > 0 ? goalRank : "-"} / {totalPlayers}
+        </div>
       </div>
 
       <div class="stat-card">
@@ -149,7 +151,9 @@ const bestRecord = bestRecords.sort((a, b) => a.rank - b.rank)[0];
       <div class="stat-card">
         <span class="stat-label">MOM</span>
         <div class="stat-value">{player.mom}</div>
-        <div class="stat-rank">RANK {momRank} / {totalPlayers}</div>
+        <div class="stat-rank">
+          RANK {player.mom > 0 ? momRank : "-"} / {totalPlayers}
+        </div>
       </div>
     </div>
   </section>
