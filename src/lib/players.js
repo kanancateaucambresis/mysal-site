@@ -27,3 +27,19 @@ export async function getPlayers() {
     };
   });
 }
+
+export async function getSiteData() {
+  const res = await fetch(CSV_URL);
+  const text = await res.text();
+
+  const rows = text
+    .trim()
+    .split("\n")
+    .map((row) => row.split(","));
+
+  return {
+    displayMonth: rows[0][12],
+    updatedDate: rows[1][12],
+    latestMatch: rows[2][12],
+  };
+}

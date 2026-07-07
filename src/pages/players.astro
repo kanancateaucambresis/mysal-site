@@ -1,6 +1,8 @@
 ---
 import "../styles/global.css";
+import "../styles/players.css";
 import Header from "../components/Header.astro";
+import BackHome from "../components/BackHome.astro";
 import Footer from "../components/Footer.astro";
 import { getPlayers } from "../lib/players.js";
 
@@ -33,9 +35,9 @@ const rookies = players
   .sort(byId);
 
 const groups = [
-  { title: "LEGENDS", players: legends },
-  { title: "MEMBERS", players: members },
-  { title: "ROOKIES", players: rookies },
+  { title: "LEGENDS", subtitle: "15+ APPEARANCES", players: legends },
+  { title: "MEMBERS", subtitle: "5–14 APPEARANCES", players: members },
+  { title: "ROOKIES", subtitle: "1–4 APPEARANCES", players: rookies },
 ];
 ---
 
@@ -52,44 +54,56 @@ const groups = [
 
   <Header />
 
-  <section class="player-index-header">
-    <h2>PLAYER INDEX</h2>
-    <span>{players.length} PLAYERS</span>
+  <section class="players-card">
+
+    <div class="players-card-head">
+      <h2>PLAYER INDEX</h2>
+      <span>{players.length} PLAYERS</span>
+    </div>
+
+    <div class="players-dashed-line"></div>
+
+    {groups.map((group) => (
+      <section class="player-group">
+        <div class="player-group-head">
+          <div>
+            <h2>{group.title}</h2>
+            <p>{group.subtitle}</p>
+          </div>
+
+          <span>{group.players.length} PLAYERS</span>
+        </div>
+
+        <div class="player-index-list">
+          {group.players.map((player) => (
+            <a class={`player-index-row ${rankClass(player)}`} href={`/player/${player.id}`}>
+              <img
+                class="player-avatar"
+                src={imagePath(player)}
+                alt={player.name}
+                onerror="this.src='/players/placeholder-player.webp'"
+              />
+
+              <div class="player-info">
+                <div class="player-name">{player.name}</div>
+
+                <div class="player-meta">
+                  <span>{player.id}</span>
+                  <span>|</span>
+                  <span>{player.rank.toUpperCase()}</span>
+                </div>
+              </div>
+
+              <div class="arrow">›</div>
+            </a>
+          ))}
+        </div>
+      </section>
+    ))}
+
   </section>
 
-  {groups.map((group) => (
-    <section class="player-group">
-      <div class="player-group-head">
-        <h2>{group.title}</h2>
-        <span>{group.players.length} PLAYERS</span>
-      </div>
-
-      <div class="player-index-list">
-        {group.players.map((player) => (
-          <a class={`player-index-row ${rankClass(player)}`} href={`/player/${player.id}`}>
-            <img
-              class="avatar"
-              src={imagePath(player)}
-              alt={player.name}
-              onerror="this.src='/players/placeholder-player.webp'"
-            />
-
-            <div class="player-info">
-              <div class="player-name">{player.name}</div>
-
-              <div class="player-meta">
-                <span>{player.id}</span>
-                <span>｜</span>
-                <span>{player.rank.toUpperCase()}</span>
-              </div>
-            </div>
-
-            <div class="arrow">›</div>
-          </a>
-        ))}
-      </div>
-    </section>
-  ))}
+  <BackHome />
 
   <Footer />
 

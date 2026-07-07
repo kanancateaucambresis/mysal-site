@@ -1,0 +1,225 @@
+.player-profile-card,
+.player-stats-card {
+  background: #fff;
+  border-radius: 36px;
+  padding: 28px 18px 24px;
+  margin-top: 46px;
+  overflow: hidden;
+}
+
+.player-profile-card.rank-legend {
+  background: linear-gradient(90deg, #fff 0%, #fffaf0 100%);
+}
+
+.player-profile-card.rank-member {
+  background: linear-gradient(90deg, #fff 0%, #f2f8ff 100%);
+}
+
+.player-profile-card.rank-rookie {
+  background: linear-gradient(90deg, #fff 0%, #f7f7f7 100%);
+}
+
+.profile-center {
+  text-align: center;
+}
+
+.profile-avatar {
+  display: block;
+  width: 128px;
+  height: 128px;
+  margin: 4px auto 22px;
+  border-radius: 50%;
+  object-fit: cover;
+  filter: grayscale(100%);
+  background: #ededed;
+}
+
+.profile-center h1 {
+  font-size: 34px;
+  font-weight: 950;
+  letter-spacing: -.03em;
+  line-height: 1.05;
+}
+
+.profile-meta {
+  margin-top: 9px;
+  font-size: 12px;
+  font-weight: 850;
+  letter-spacing: .10em;
+}
+
+.rank-legend .profile-meta {
+  color: var(--legend);
+}
+
+.rank-member .profile-meta {
+  color: var(--blue);
+}
+
+.rank-rookie .profile-meta {
+  color: #888;
+}
+
+.profile-divider {
+  border-top: 1px dashed #9a9a9a;
+  margin: 26px 0 22px;
+}
+
+.best-label {
+  display: block;
+  color: #9a9a9a;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: .18em;
+}
+
+.best-rank {
+  margin-top: 12px;
+  color: var(--blue);
+  font-family: Futura, "Avenir Next", Arial, sans-serif;
+  font-size: 46px;
+  font-style: italic;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.best-rank span {
+  font-size: 18px;
+  vertical-align: super;
+  margin-left: 2px;
+  letter-spacing: .04em;
+}
+
+.best-category {
+  margin-top: 6px;
+  font-size: 16px;
+  font-weight: 950;
+  letter-spacing: .14em;
+}
+
+.stats-card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.stats-card-head h2 {
+  font-size: 34px;
+  font-weight: 950;
+  letter-spacing: -1px;
+  line-height: 1;
+}
+
+.stats-card-head p {
+  margin-top: 8px;
+  color: var(--blue);
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: .10em;
+}
+
+.stats-card-head > span {
+  text-align: right;
+  color: #9a9a9a;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.6;
+}
+
+.stats-grid {
+  margin-top: 24px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+.stat-card {
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-radius: 24px;
+  padding: 18px 10px 20px;
+  text-align: center;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, .04);
+}
+
+.stat-label {
+  display: block;
+  color: #111;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: .12em;
+  white-space: nowrap;
+}
+
+.stat-value {
+  margin-top: 20px;
+  font-family: Futura, "Avenir Next", Arial, sans-serif;
+  font-size: 56px;
+  font-style: italic;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -.05em;
+}
+
+.stat-rank {
+  display: inline-block;
+  margin-top: 16px;
+  padding: 6px 9px;
+  border: 1px solid var(--blue);
+  border-radius: 999px;
+  color: var(--blue);
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: .08em;
+  white-space: nowrap;
+}
+
+@media (max-width: 390px) {
+  .player-profile-card,
+  .player-stats-card {
+    padding: 26px 16px 22px;
+    border-radius: 32px;
+  }
+
+  .profile-avatar {
+    width: 118px;
+    height: 118px;
+  }
+
+  .profile-center h1 {
+    font-size: 31px;
+  }
+
+  .best-rank {
+    font-size: 42px;
+  }
+
+  .best-rank span {
+    font-size: 16px;
+  }
+
+  .best-category {
+    font-size: 15px;
+  }
+
+  .stats-card-head h2 {
+    font-size: 30px;
+  }
+
+  .stats-grid {
+    gap: 12px;
+  }
+
+  .stat-card {
+    padding: 17px 8px 19px;
+  }
+
+  .stat-value {
+    font-size: 48px;
+  }
+
+  .stat-rank {
+    font-size: 8px;
+    padding: 5px 7px;
+  }
+}

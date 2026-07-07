@@ -1,0 +1,215 @@
+.goals-card {
+  background: #fff;
+  border-radius: 36px;
+  padding: 28px 18px 24px;
+  margin-top: 46px;
+  overflow: hidden;
+}
+
+.goals-card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.month-title {
+  font-size: 36px;
+  font-weight: 900;
+  letter-spacing: 0.03em;
+  line-height: 1;
+}
+
+.updated {
+  text-align: right;
+  padding-top: 2px;
+}
+
+.updated span {
+  display: block;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  color: #9a9a9a;
+  margin-bottom: 10px;
+}
+
+.updated strong {
+  display: block;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #9a9a9a;
+}
+
+.card-divider {
+  border-top: 1px dashed #9a9a9a;
+  margin: 26px 0 24px;
+}
+
+.goals-title {
+  font-size: 24px;
+  font-weight: 950;
+  letter-spacing: 0.01em;
+  color: var(--blue);
+  margin-bottom: 10px;
+  white-space: nowrap;
+}
+
+.goals-list {
+  width: 100%;
+}
+
+.goals-row {
+  display: grid;
+  grid-template-columns: 28px 54px minmax(0, 1fr) 64px;
+  align-items: center;
+  gap: 8px;
+  min-height: 84px;
+  border-bottom: 1px solid #e6e6e6;
+  text-decoration: none;
+  color: #000;
+}
+
+.goals-row:last-child {
+  border-bottom: none;
+}
+
+.rank {
+  font-family: Futura, "Avenir Next", Arial, sans-serif;
+  font-size: 27px;
+  font-weight: 500;
+  font-style: italic;
+  line-height: 1;
+}
+
+.goals-row.is-first .rank {
+  color: var(--blue);
+}
+
+.avatar-wrap {
+  position: relative;
+  width: 50px;
+  height: 50px;
+}
+
+.goals-card .avatar {
+  display: block;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  filter: grayscale(100%);
+  background: #ededed;
+}
+
+.crown {
+  position: absolute;
+  top: -15px;
+  left: 17px;
+  z-index: 2;
+  color: var(--blue);
+  font-size: 20px;
+  line-height: 1;
+}
+
+.player-info {
+  min-width: 0;
+}
+
+.player-name {
+  font-size: 17px;
+  font-weight: 900;
+  letter-spacing: 0.01em;
+  line-height: 1.15;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.player-meta {
+  display: block;
+  margin-top: 5px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  white-space: nowrap;
+}
+
+
+.rank-legend .player-meta {
+  color: var(--legend);
+}
+
+.rank-member .player-meta {
+  color: var(--blue);
+}
+
+.rank-rookie .player-meta {
+  color: #888;
+}
+
+.score {
+  text-align: right;
+  line-height: 1;
+}
+
+.score strong {
+  display: block;
+  font-family: Futura, "Avenir Next", Arial, sans-serif;
+  font-size: 40px;
+  font-weight: 500;
+  font-style: italic;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+.goals-row.is-first .score strong {
+  color: var(--blue);
+}
+
+.score span {
+  display: block;
+  margin-top: 5px;
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+@media (max-width: 390px) {
+  .goals-card {
+    padding: 26px 16px 22px;
+  }
+
+  .goals-title {
+    font-size: 22px;
+  }
+
+  .goals-row {
+    grid-template-columns: 26px 50px minmax(0, 1fr) 60px;
+    gap: 7px;
+    min-height: 82px;
+  }
+
+  .avatar-wrap {
+    width: 48px;
+    height: 48px;
+  }
+
+  .goals-card .avatar {
+    width: 48px;
+    height: 48px;
+  }
+
+  .player-name {
+    font-size: 16px;
+  }
+
+  .player-meta {
+    font-size: 9px;
+  }
+
+  .score strong {
+    font-size: 38px;
+  }
+}

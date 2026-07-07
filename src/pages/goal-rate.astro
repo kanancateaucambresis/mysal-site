@@ -1,15 +1,22 @@
 ---
 import "../styles/global.css";
+import "../styles/gpg.css";
 import Header from "../components/Header.astro";
 import BackHome from "../components/BackHome.astro";
 import Footer from "../components/Footer.astro";
-import { getPlayers } from "../lib/players.js";
+import { getPlayers, getSiteData } from "../lib/players.js";
 
 const players = await getPlayers();
+const siteData = await getSiteData();
 
 const rateRanking = [...players]
   .filter((player) => player.matches > 0)
-  .sort((a, b) => b.rate - a.rate);
+  .sort((a, b) => {
+    if (b.rate !== a.rate) return b.rate - a.rate;
+    if (b.total !== a.total) return b.total - a.total;
+    return a.id.localeCompare(b.id, undefined, { numeric: true });
+  })
+  .slice(0, 10);
 
 function imagePath(player) {
   return player.photo
@@ -27,52 +34,64 @@ function isLegend(player) {
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GOAL RATE | MYSAL STATS</title>
+  <title>GPG | MYSAL STATS</title>
 </head>
 
 <body>
-<main class="container">
+  <main class="container">
+    <Header />
 
-  <Header />
+    <section class="gpg-card">
+      <div class="gpg-card-head">
+        <h2>{siteData.displayMonth}</h2>
 
-  <section class="ranking-section">
-    <div class="section-head">
-      <h2>GOAL RATE</h2>
-      <span>ALL PLAYERS</span>
-    </div>
+        <div class="updated">
+          <span>UPDATED</span>
+          <strong>{siteData.updatedDate}</strong>
+        </div>
+      </div>
 
-    <div class="ranking-list">
-      {rateRanking.map((player, index) => (
-        <a class={`ranking-row ${isLegend(player) ? "is-legend" : ""}`} href={`/player/${player.id}`}>
-          <div class="rank">
-            {String(index + 1).padStart(2, "0")}
-          </div>
+      <div class="gpg-dashed-line"></div>
 
-          <img
-            class="avatar"
-            src={imagePath(player)}
-            alt={player.name}
-            onerror="this.src='/players/placeholder-player.webp'"
-          />
+      <h1 class="gpg-title">TOP 10 GOAL PER GAME</h1>
 
-          <div class="name-area">
-            <strong>{player.name}</strong>
-            <span>{player.id} ｜ {player.rank.toUpperCase()}</span>
-          </div>
+      <div class="gpg-list">
+        {rateRanking.map((player, index) => (
+          <a
+  class={`gpg-row ${index === 0 ? "is-first" : ""} rank-${player.rank?.toLowerCase()}`}
+  href={`/player/${player.id}`}
+>
+            <div class="gpg-rank">
+              {index + 1}
+            </div>
 
-          <div class="goals">
-            <strong>{player.rate.toFixed(2)}</strong>
-            <span>RATE</span>
-          </div>
-        </a>
-      ))}
-    </div>
-  </section>
+            <div class="gpg-avatar-wrap">
+              {index === 0 && <div class="crown">♛</div>}
+              <img
+                class="gpg-avatar"
+                src={imagePath(player)}
+                alt={player.name}
+                onerror="this.src='/players/placeholder-player.webp'"
+              />
+            </div>
 
-  <BackHome />
+            <div class="gpg-name-area">
+              <strong>{player.name}</strong>
+              <span>{player.id} | {player.rank.toUpperCase()}</span>
+            </div>
 
-  <Footer />
+            <div class="gpg-score">
+              <strong>{player.rate.toFixed(2)}</strong>
+              {index === 0 && <span>GOAL/GAME</span>}
+            </div>
+          </a>
+        ))}
+      </div>
+    </section>
 
-</main>
+    <BackHome />
+
+    <Footer />
+  </main>
 </body>
 </html>

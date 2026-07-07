@@ -1,15 +1,22 @@
 ---
 import "../styles/global.css";
+import "../styles/mom.css";
 import Header from "../components/Header.astro";
 import BackHome from "../components/BackHome.astro";
 import Footer from "../components/Footer.astro";
-import { getPlayers } from "../lib/players.js";
+import { getPlayers, getSiteData } from "../lib/players.js";
 
 const players = await getPlayers();
+const siteData = await getSiteData();
 
 const momRanking = [...players]
   .filter((player) => player.mom > 0)
-  .sort((a, b) => b.mom - a.mom);
+  .sort((a, b) => {
+    if (b.mom !== a.mom) return b.mom - a.mom;
+    if (b.total !== a.total) return b.total - a.total;
+    return a.id.localeCompare(b.id, undefined, { numeric: true });
+  })
+  .slice(0, 10);
 
 function imagePath(player) {
   return player.photo
@@ -35,36 +42,57 @@ function isLegend(player) {
 
   <Header />
 
-  <section class="ranking-section">
-    <div class="section-head">
-      <h2>MOM RANKING</h2>
-      <span>ALL PLAYERS</span>
+  <section class="mom-card">
+
+    <div class="mom-card-head">
+      <h2>ALL TIME</h2>
+
+      <div class="updated">
+        <span>UPDATED</span>
+        <strong>{siteData.updatedDate}</strong>
+      </div>
     </div>
 
-    <div class="ranking-list">
+    <div class="mom-dashed-line"></div>
+
+    <h1 class="mom-title">TOP MOM WINNERS</h1>
+
+    <div class="mom-list">
       {momRanking.map((player, index) => (
-        <a class={`ranking-row ${isLegend(player) ? "is-legend" : ""}`} href={`/player/${player.id}`}>
-          <div class="rank">{String(index + 1).padStart(2, "0")}</div>
+        <a
+          class={`mom-row ${index === 0 ? "is-first" : ""} rank-${player.rank?.toLowerCase()}`}
+          href={`/player/${player.id}`}
+        >
 
-          <img
-            class="avatar"
-            src={imagePath(player)}
-            alt={player.name}
-            onerror="this.src='/players/placeholder-player.webp'"
-          />
+          <div class="mom-rank">
+            {index + 1}
+          </div>
 
-          <div class="name-area">
+          <div class="mom-avatar-wrap">
+            {index === 0 && <div class="crown">♛</div>}
+
+            <img
+              class="mom-avatar"
+              src={imagePath(player)}
+              alt={player.name}
+              onerror="this.src='/players/placeholder-player.webp'"
+            />
+          </div>
+
+          <div class="mom-name-area">
             <strong>{player.name}</strong>
-            <span>{player.id} ｜ {player.rank.toUpperCase()}</span>
+            <span>{player.id} | {player.rank.toUpperCase()}</span>
           </div>
 
-          <div class="goals">
+          <div class="mom-score">
             <strong>{player.mom}</strong>
-            <span>MOM</span>
+            {index === 0 && <span>TIMES</span>}
           </div>
+
         </a>
       ))}
     </div>
+
   </section>
 
   <BackHome />

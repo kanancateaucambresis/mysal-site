@@ -1,14 +1,18 @@
 ---
 import "../styles/global.css";
+import "../styles/goals.css";
 import Header from "../components/Header.astro";
-import BackHome from "../components/BackHome.astro";
 import Footer from "../components/Footer.astro";
-import { getPlayers } from "../lib/players.js";
+import { getPlayers, getSiteData } from "../lib/players.js";
 
 const players = await getPlayers();
+const siteData = await getSiteData();
 
-const goalRanking = [...players]
-  .sort((a, b) => b.goals - a.goals);
+const goalRanking = [...players].sort((a, b) => {
+  if (b.goals !== a.goals) return b.goals - a.goals;
+  if (b.total !== a.total) return b.total - a.total;
+  return a.id.localeCompare(b.id, undefined, { numeric: true });
+});
 
 function imagePath(player) {
   return player.photo
@@ -19,6 +23,10 @@ function imagePath(player) {
 function isLegend(player) {
   return player.rank?.toLowerCase() === "legend";
 }
+
+function rankClass(player) {
+  return `rank-${player.rank?.toLowerCase()}`;
+}
 ---
 
 <!doctype html>
@@ -26,50 +34,59 @@ function isLegend(player) {
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GOAL RANKING | MYSAL STATS</title>
+  <title>GOALS | MYSAL STATS</title>
 </head>
 
 <body>
-<main class="container">
+  <main class="container">
+    <Header active="goals" />
 
-  <Header />
+    <section class="goals-card">
+      <div class="goals-card-head">
+        <div class="month-title">{siteData.displayMonth}</div>
+        <div class="updated">
+          <span>UPDATED</span>
+          <strong>{siteData.updatedDate}</strong>
+        </div>
+      </div>
 
-  <section class="ranking-section">
-    <div class="section-head">
-      <h2>GOAL RANKING</h2>
-      <span>ALL PLAYERS</span>
-    </div>
+      <div class="card-divider"></div>
 
-    <div class="ranking-list">
-      {goalRanking.map((player, index) => (
-        <a class={`ranking-row ${isLegend(player) ? "is-legend" : ""}`} href={`/player/${player.id}`}>
-          <div class="rank">{String(index + 1).padStart(2, "0")}</div>
+      <h1 class="goals-title">TOP 10 SCORERS</h1>
 
-          <img
-            class="avatar"
-            src={imagePath(player)}
-            alt={player.name}
-            onerror="this.src='/players/placeholder-player.webp'"
-          />
+      <div class="goals-list">
+        {goalRanking.slice(0, 10).map((player, index) => (
+          <a
+            class={`goals-row ${index === 0 ? "is-first" : ""} ${isLegend(player) ? "is-legend" : ""} ${rankClass(player)}`}
+            href={`/player/${player.id}`}
+          >
+            <div class="rank">{index + 1}</div>
 
-          <div class="name-area">
-            <strong>{player.name}</strong>
-            <span>{player.id} ｜ {player.rank.toUpperCase()}</span>
-          </div>
+            <div class="avatar-wrap">
+              {index === 0 && <div class="crown">♛</div>}
+              <img
+                class="avatar"
+                src={imagePath(player)}
+                alt={player.name}
+                onerror="this.src='/players/placeholder-player.webp'"
+              />
+            </div>
 
-          <div class="goals">
-            <strong>{player.goals}</strong>
-            <span>GOALS</span>
-          </div>
-        </a>
-      ))}
-    </div>
-  </section>
+            <div class="player-info">
+              <div class="player-name">{player.name}</div>
+              <div class="player-meta">{player.id} | {player.rank.toUpperCase()}</div>
+            </div>
 
-  <BackHome />
+            <div class="score">
+              <strong>{player.goals}</strong>
+              {index === 0 && <span>GOALS</span>}
+            </div>
+          </a>
+        ))}
+      </div>
+    </section>
 
-  <Footer />
-
-</main>
+    <Footer />
+  </main>
 </body>
 </html>

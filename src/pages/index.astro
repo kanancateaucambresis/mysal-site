@@ -1,16 +1,32 @@
 ---
 import "../styles/global.css";
+import "../styles/home.css";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
-import { getPlayers } from "../lib/players.js";
+import { getPlayers, getSiteData } from "../lib/players.js";
 
 const players = await getPlayers();
+const siteData = await getSiteData();
 
 const goalRanking = [...players]
-  .sort((a, b) => b.goals - a.goals)
-  .slice(0, 5);
+  .sort((a, b) => {
+    if (b.goals !== a.goals) return b.goals - a.goals;
+    if (b.total !== a.total) return b.total - a.total;
+    return a.id.localeCompare(b.id, undefined, { numeric: true });
+  })
+  .slice(0, 3);
 
-const topScorer = goalRanking[0];
+const gpgRanking = [...players]
+  .filter((player) => player.matches > 0)
+  .sort((a, b) => {
+    if (b.rate !== a.rate) return b.rate - a.rate;
+    if (b.total !== a.total) return b.total - a.total;
+    return a.id.localeCompare(b.id, undefined, { numeric: true });
+  })
+  .slice(0, 3);
+
+const topGoal = goalRanking[0]?.goals ?? 0;
+const topGpg = gpgRanking[0]?.rate ?? 0;
 
 const latestMom =
   players.find((player) => player.latestMom) ||
@@ -22,8 +38,8 @@ function imagePath(player) {
     : "/players/placeholder-player.webp";
 }
 
-function isLegend(player) {
-  return player.rank?.toLowerCase() === "legend";
+function rankClass(player) {
+  return `rank-${player.rank.toLowerCase()}`;
 }
 ---
 
@@ -33,12 +49,12 @@ function isLegend(player) {
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>MYSAL STATS | PLAYER STATISTICS</title>
+  <title>MYSAL STATS | MONTHLY LEADERBOARD</title>
 
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
-  <meta name="description" content="マイサル公式選手スタッツ。得点ランキング・得点率・MOMランキング・選手成績を掲載。" />
+  <meta name="description" content="マイサル公式選手スタッツ。得点ランキング・GPG・MOMランキング・選手成績を掲載。" />
   <meta property="og:title" content="MYSAL STATS" />
   <meta property="og:description" content="マイサル公式選手スタッツ" />
   <meta property="og:type" content="website" />
@@ -49,81 +65,128 @@ function isLegend(player) {
 
   <Header />
 
-  <a class={`hero-link ${isLegend(topScorer) ? "is-legend" : ""}`} href={`/player/${topScorer.id}`}>
-    <section class="hero">
-      <div class="hero-meta">JULY 2026</div>
+  <section class={`home-mom-card ${rankClass(latestMom)}`}>
+  <div class="home-card-head">
+    <h2>MOM</h2>
 
-      <div class="hero-copy">
-        <p class="eyebrow">TOP SCORER</p>
+    <div class="date-box">
+      <span>LATEST MATCH</span>
+      <strong>{siteData.latestMatch}</strong>
+    </div>
+  </div>
 
-        <div class="big-number">{topScorer.goals}</div>
-        <p class="unit">GOALS</p>
+  <div class="dot-line"></div>
 
-        <img
-          class="hero-image"
-          src={imagePath(topScorer)}
-          alt={topScorer.name}
-          onerror="this.src='/players/placeholder-player.webp'"
-        />
-
-        <div class="hero-name-area">
-          <h2>{topScorer.name}</h2>
-          <p>{topScorer.id} ｜ {topScorer.rank.toUpperCase()}</p>
-        </div>
-      </div>
-    </section>
-  </a>
-
-  <section class="stats-strip">
-    <div><span>GAMES</span><strong>{topScorer.matches}</strong></div>
-    <div><span>RATE</span><strong>{topScorer.rate.toFixed(2)}</strong></div>
-    <div><span>MOM</span><strong>{topScorer.mom}</strong></div>
-  </section>
-
-  <a class={`mom-card ${isLegend(latestMom) ? "is-legend" : ""}`} href={`/player/${latestMom.id}`}>
-    <div>
-      <p class="mom-label">LATEST MOM</p>
-      <h2>{latestMom.name}</h2>
-      <span>{latestMom.id} ｜ {latestMom.rank.toUpperCase()}</span>
+  <a class="mom-player-row" href={`/player/${latestMom.id}`}>
+    <div class="photo-wrap mom-photo">
+      <span class="crown-above mom-crown">♛</span>
+      <img
+        src={imagePath(latestMom)}
+        alt={latestMom.name}
+        onerror="this.src='/players/placeholder-player.webp'"
+      />
     </div>
 
-    <img
-      src={imagePath(latestMom)}
-      alt={latestMom.name}
-      onerror="this.src='/players/placeholder-player.webp'"
-    />
+    <div class="mom-name-box">
+      <h3>{latestMom.name}</h3>
+      <p>{latestMom.id} ｜ {latestMom.rank.toUpperCase()}</p>
+    </div>
   </a>
 
-  <section class="ranking-section">
-    <div class="section-head">
-      <h2>GOAL RANKING</h2>
-      <a href="/goal-ranking">VIEW ALL</a>
+  <a class="outline-button" href="/mom-ranking">
+  VIEW MOM RANKING　&gt;
+</a>
+</section>
+
+  <section class="home-board-card">
+    <div class="board-head">
+      <h2>{siteData.displayMonth}</h2>
+
+      <p class="updated">
+        UPDATED<br />
+        <span>{siteData.updatedDate}</span>
+      </p>
     </div>
 
-    <div class="ranking-list">
-      {goalRanking.map((player,index)=>(
-        <a class={`ranking-row ${isLegend(player) ? "is-legend" : ""}`} href={`/player/${player.id}`}>
-          <div class="rank">{String(index+1).padStart(2,"0")}</div>
+    <div class="dot-line"></div>
 
-          <img
-            class="avatar"
-            src={imagePath(player)}
-            alt={player.name}
-            onerror="this.src='/players/placeholder-player.webp'"
-          />
+    <h3 class="board-title">TOP SCORERS</h3>
 
-          <div class="name-area">
+    <div class="board-list">
+      {goalRanking.map((player, index) => (
+        <a class={`board-row ${rankClass(player)}`} href={`/player/${player.id}`}>
+          <div class={`board-rank ${player.goals === topGoal ? "is-top" : ""}`}>
+            {String(index + 1).padStart(2, "0")}
+          </div>
+
+          <div class="photo-wrap small">
+            {player.goals === topGoal && (
+              <span class="crown-above small-crown">♛</span>
+            )}
+
+            <img
+              src={imagePath(player)}
+              alt={player.name}
+              onerror="this.src='/players/placeholder-player.webp'"
+            />
+          </div>
+
+          <div class="board-name">
             <strong>{player.name}</strong>
             <span>{player.id} ｜ {player.rank.toUpperCase()}</span>
           </div>
 
-          <div class="goals">
+          <div class={`board-score ${player.goals === topGoal ? "is-top" : ""}`}>
             <strong>{player.goals}</strong>
             <span>GOALS</span>
           </div>
         </a>
       ))}
     </div>
+
+    <a class="outline-button board-button" href="/goal-ranking">
+      VIEW　ALL　PLAYERS　&gt;
+    </a>
+
+    <div class="dot-line section-divider"></div>
+
+    <h3 class="board-title">GOAL PER GAME</h3>
+
+    <div class="board-list">
+      {gpgRanking.map((player, index) => (
+        <a class={`board-row ${rankClass(player)}`} href={`/player/${player.id}`}>
+          <div class={`board-rank ${player.rate === topGpg ? "is-top" : ""}`}>
+            {String(index + 1).padStart(2, "0")}
+          </div>
+
+          <div class="photo-wrap small">
+            {player.rate === topGpg && (
+              <span class="crown-above small-crown">♛</span>
+            )}
+
+            <img
+              src={imagePath(player)}
+              alt={player.name}
+              onerror="this.src='/players/placeholder-player.webp'"
+            />
+          </div>
+
+          <div class="board-name">
+            <strong>{player.name}</strong>
+            <span>{player.id} ｜ {player.rank.toUpperCase()}</span>
+          </div>
+
+          <div class={`board-score ${player.rate === topGpg ? "is-top" : ""}`}>
+            <strong>{player.rate.toFixed(2)}</strong>
+            <span>GPG</span>
+          </div>
+        </a>
+      ))}
+    </div>
+
+    <a class="outline-button board-button" href="/goal-rate">
+      VIEW　ALL　PLAYERS　&gt;
+    </a>
   </section>
 
   <Footer />

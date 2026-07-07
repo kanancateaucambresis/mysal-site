@@ -1,18 +1,21 @@
 ---
 import "../../styles/global.css";
+import "../../styles/player.css";
 import Header from "../../components/Header.astro";
 import Footer from "../../components/Footer.astro";
-import { getPlayers } from "../../lib/players.js";
+import { getPlayers, getSiteData } from "../../lib/players.js";
 
 const players = await getPlayers();
+const siteData = await getSiteData();
 
 const { id } = Astro.params;
-
 const player = players.find((p) => p.id === id);
 
 if (!player) {
   return Astro.redirect("/players");
 }
+
+const totalPlayers = players.length;
 
 function imagePath(player) {
   return player.photo
@@ -20,40 +23,42 @@ function imagePath(player) {
     : "/players/placeholder-player.webp";
 }
 
-function isLegend(player) {
-  return player.rank?.toLowerCase() === "legend";
+function rankClass(player) {
+  return `rank-${player.rank?.toLowerCase()}`;
 }
 
 function getRank(players, targetPlayer, key) {
-  const sorted = [...players].sort((a, b) => b[key] - a[key]);
+  const sorted = [...players].sort((a, b) => {
+    if (b[key] !== a[key]) return b[key] - a[key];
+    if (b.total !== a.total) return b.total - a.total;
+    return a.id.localeCompare(b.id, undefined, { numeric: true });
+  });
 
-  let rank = 1;
-  let previousValue = null;
-  let previousRank = 1;
+  const index = sorted.findIndex((p) => p.id === targetPlayer.id);
 
-  for (let i = 0; i < sorted.length; i++) {
-    const currentValue = sorted[i][key];
+  return index >= 0 ? index + 1 : "-";
+}
 
-    if (previousValue !== null && currentValue !== previousValue) {
-      rank = i + 1;
-    } else {
-      rank = previousRank;
-    }
-
-    if (sorted[i].id === targetPlayer.id) {
-      return rank;
-    }
-
-    previousValue = currentValue;
-    previousRank = rank;
-  }
-
-  return "-";
+function rankSuffix(rank) {
+  if (rank === 1) return "1ST";
+  if (rank === 2) return "2ND";
+  if (rank === 3) return "3RD";
+  return `${rank}TH`;
 }
 
 const goalRank = getRank(players, player, "goals");
-const rateRank = getRank(players.filter((p) => p.matches > 0), player, "rate");
+const gpgRank = getRank(players.filter((p) => p.matches > 0), player, "rate");
+const appearanceRank = getRank(players, player, "total");
 const momRank = getRank(players, player, "mom");
+
+const bestRecords = [
+  { label: "GOALS", rank: goalRank },
+  { label: "GPG", rank: gpgRank },
+  { label: "APPEARANCES", rank: appearanceRank },
+  { label: "MOM", rank: momRank },
+].filter((item) => typeof item.rank === "number");
+
+const bestRecord = bestRecords.sort((a, b) => a.rank - b.rank)[0];
 ---
 
 <!doctype html>
@@ -67,47 +72,86 @@ const momRank = getRank(players, player, "mom");
 <body>
 <main class="container">
 
-  <Header />
+  <Header active="players" />
 
-  <section class={`hero ${isLegend(player) ? "is-legend" : ""}`}>
-    <div class="hero-meta">{player.rank.toUpperCase()}</div>
-
-    <div class="hero-copy">
-      <p class="eyebrow">PLAYER PROFILE</p>
-
-      <div class="big-number">{player.goals}</div>
-      <p class="unit">GOALS</p>
-
+  <section class={`player-profile-card ${rankClass(player)}`}>
+    <div class="profile-center">
       <img
-        class="hero-image"
+        class="profile-avatar"
         src={imagePath(player)}
         alt={player.name}
         onerror="this.src='/players/placeholder-player.webp'"
       />
 
-      <div class="hero-name-area">
-        <h2>{player.name}</h2>
-        <p>{player.id} ｜ {player.rank.toUpperCase()}</p>
+      <h1>{player.name}</h1>
+
+      <p class="profile-meta">
+        {player.id} | {player.rank.toUpperCase()}
+      </p>
+
+      <div class="profile-divider"></div>
+
+      <span class="best-label">BEST RECORD</span>
+
+      <div class="best-rank">
+        {rankSuffix(bestRecord.rank)}
+      </div>
+
+      <div class="best-category">
+        {bestRecord.label}
       </div>
     </div>
   </section>
 
-  <section class="stats-strip" style="margin-bottom:16px;">
-    <div><span>GAMES</span><strong>{player.matches}</strong></div>
-    <div><span>GOALS</span><strong>{player.goals}</strong></div>
-    <div><span>RATE</span><strong>{player.rate.toFixed(2)}</strong></div>
+  <section class="player-stats-card">
+    <div class="stats-card-head">
+      <div>
+        <h2>MONTHLY</h2>
+        <p>{siteData.displayMonth}</p>
+      </div>
+
+      <span>
+        UPDATED<br />
+        {siteData.updatedDate}
+      </span>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <span class="stat-label">GOALS</span>
+        <div class="stat-value">{player.goals}</div>
+        <div class="stat-rank">RANK {goalRank} / {totalPlayers}</div>
+      </div>
+
+      <div class="stat-card">
+        <span class="stat-label">GPG</span>
+        <div class="stat-value">{player.rate.toFixed(2)}</div>
+        <div class="stat-rank">RANK {gpgRank} / {totalPlayers}</div>
+      </div>
+    </div>
   </section>
 
-  <section class="stats-strip" style="margin-bottom:16px;">
-    <div><span>APPEARANCES</span><strong>{player.total}</strong></div>
-    <div><span>MOM</span><strong>{player.mom}</strong></div>
-    <div><span>RANK</span><strong style="font-size:22px;">{player.rank}</strong></div>
-  </section>
+  <section class="player-stats-card">
+    <div class="stats-card-head">
+      <div>
+        <h2>ALL TIME</h2>
+        <p>CAREER RECORDS</p>
+      </div>
+    </div>
 
-  <section class="stats-strip">
-    <div><span>GOAL RANK</span><strong>{goalRank}</strong></div>
-    <div><span>RATE RANK</span><strong>{rateRank}</strong></div>
-    <div><span>MOM RANK</span><strong>{momRank}</strong></div>
+    <div class="stats-grid">
+      <div class="stat-card">
+        <span class="stat-label">APPEARANCES</span>
+        <div class="stat-value">{player.total}</div>
+        <div class="stat-rank">RANK {appearanceRank} / {totalPlayers}</div>
+      </div>
+
+      <div class="stat-card">
+        <span class="stat-label">MOM</span>
+        <div class="stat-value">{player.mom}</div>
+        <div class="stat-rank">RANK {momRank} / {totalPlayers}</div>
+      </div>
+    </div>
   </section>
 
   <div class="back-home">

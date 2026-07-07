@@ -1,0 +1,185 @@
+.players-card {
+  background: #fff;
+  border-radius: 36px;
+  padding: 28px 18px 24px;
+  margin-top: 46px;
+}
+
+.players-card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.players-card-head h2 {
+  font-size: 36px;
+  font-weight: 900;
+  letter-spacing: 0.03em;
+  line-height: 1;
+}
+
+.players-card-head span {
+  font-size: 13px;
+  font-weight: 900;
+  color: var(--blue);
+  letter-spacing: .08em;
+}
+
+.players-dashed-line {
+  border-top: 1px dashed #9a9a9a;
+  margin: 26px 0 26px;
+}
+
+.player-group {
+  margin-bottom: 34px;
+}
+
+.player-group:last-child {
+  margin-bottom: 0;
+}
+
+.player-group-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 14px;
+}
+
+.player-group-head h2 {
+  font-size: 28px;
+  font-weight: 950;
+  line-height: 1;
+}
+
+.player-group-head p {
+  margin-top: 6px;
+  font-size: 11px;
+  font-weight: 800;
+  color: #9a9a9a;
+  letter-spacing: .14em;
+}
+
+.player-group-head span {
+  font-size: 12px;
+  font-weight: 900;
+  color: var(--blue);
+  letter-spacing: .08em;
+}
+
+.player-index-list {
+  border: 1px solid #e7e7e7;
+  border-radius: 24px;
+  overflow: hidden;
+}
+
+.player-index-row {
+  display: grid;
+  grid-template-columns: 54px minmax(0,1fr) 18px;
+  align-items: center;
+  gap: 12px;
+  min-height: 74px;
+  padding: 0 18px;
+  border-bottom: 1px solid #ececec;
+  background: #fff;
+  transition: .15s;
+}
+
+.player-index-row:last-child {
+  border-bottom: none;
+}
+
+.player-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #ededed;
+  filter: grayscale(100%);
+}
+
+.player-info{
+  min-width:0;
+}
+
+.player-name {
+  font-size: 17px;
+  font-weight: 900;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.player-meta {
+  display:flex;
+  gap:6px;
+  margin-top:4px;
+  color:#9a9a9a;
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:.10em;
+}
+
+.arrow {
+  font-size:22px;
+  color:#c4c4c4;
+  text-align:right;
+}
+
+.player-index-row.rank-legend {
+  background: linear-gradient(90deg, #fff 0%, #fffaf0 100%);
+}
+
+.player-index-row.rank-member {
+  background: linear-gradient(90deg, #fff 0%, #f2f8ff 100%);
+}
+
+.player-index-row.rank-rookie {
+  background: linear-gradient(90deg, #fff 0%, #f7f7f7 100%);
+}
+
+.rank-legend .player-meta {
+  color: #9a7a2f;
+}
+
+.rank-member .player-meta {
+  color: var(--blue);
+}
+
+.rank-rookie .player-meta {
+  color: #888;
+}
+
+@media (max-width:390px){
+
+.players-card{
+padding:26px 16px 22px;
+}
+
+.players-card-head h2{
+font-size:32px;
+}
+
+.player-group-head h2{
+font-size:25px;
+}
+
+.player-index-row{
+grid-template-columns:50px minmax(0,1fr) 16px;
+gap:10px;
+padding:0 16px;
+}
+
+.player-avatar{
+width:46px;
+height:46px;
+}
+
+.player-name{
+font-size:16px;
+}
+
+.player-meta{
+font-size:9px;
+}
+
+}

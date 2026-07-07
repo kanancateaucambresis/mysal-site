@@ -1,0 +1,206 @@
+.gpg-card {
+  background: #fff;
+  border-radius: 36px;
+  padding: 28px 18px 24px;
+  margin-top: 46px;
+  overflow: hidden;
+}
+
+.gpg-card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.gpg-card-head h2 {
+  font-size: 36px;
+  font-weight: 900;
+  letter-spacing: 0.03em;
+  line-height: 1;
+}
+
+.updated {
+  text-align: right;
+  padding-top: 2px;
+}
+
+.updated span {
+  display: block;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  color: #9a9a9a;
+  margin-bottom: 10px;
+}
+
+.updated strong {
+  display: block;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #9a9a9a;
+}
+
+.gpg-dashed-line {
+  border-top: 1px dashed #9a9a9a;
+  margin: 26px 0 24px;
+}
+
+.gpg-title {
+  font-size: 21px;
+  font-weight: 950;
+  letter-spacing: 0.01em;
+  color: var(--blue);
+  margin-bottom: 8px;
+  white-space: nowrap;
+}
+
+.gpg-list {
+  width: 100%;
+}
+
+.gpg-row {
+  display: grid;
+  grid-template-columns: 28px 54px minmax(0, 1fr) 64px;
+  align-items: center;
+  gap: 8px;
+  min-height: 84px;
+  border-bottom: 1px solid #e6e6e6;
+}
+
+.gpg-row:last-child {
+  border-bottom: none;
+}
+
+.gpg-rank {
+  font-family: Futura, "Avenir Next", Arial, sans-serif;
+  font-size: 27px;
+  font-weight: 500;
+  font-style: italic;
+  line-height: 1;
+}
+
+.gpg-row.is-first .gpg-rank {
+  color: var(--blue);
+}
+
+.gpg-avatar-wrap {
+  position: relative;
+  width: 50px;
+  height: 50px;
+}
+
+.gpg-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  filter: grayscale(100%);
+  background: #ededed;
+}
+
+.crown {
+  position: absolute;
+  top: -15px;
+  left: 17px;
+  z-index: 2;
+  color: var(--blue);
+  font-size: 20px;
+  line-height: 1;
+}
+
+.gpg-name-area {
+  min-width: 0;
+}
+
+.gpg-name-area strong {
+  display: block;
+  font-size: 17px;
+  font-weight: 900;
+  letter-spacing: 0.01em;
+  line-height: 1.15;
+}
+
+.gpg-name-area span {
+  display: block;
+  margin-top: 5px;
+  color: #9a9a9a;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  white-space: nowrap;
+}
+
+.rank-legend .gpg-name-area span {
+  color: var(--legend);
+}
+
+.rank-member .gpg-name-area span {
+  color: var(--blue);
+}
+
+.rank-rookie .gpg-name-area span {
+  color: #888;
+}
+
+
+.gpg-score {
+  text-align: right;
+}
+
+.gpg-score strong {
+  display: block;
+  font-family: Futura, "Avenir Next", Arial, sans-serif;
+  font-size: 32px;
+  font-weight: 500;
+  font-style: italic;
+  letter-spacing: 0;
+  line-height: 1;
+}
+
+.gpg-row.is-first .gpg-score strong {
+  color: var(--blue);
+}
+
+.gpg-score span {
+  display: block;
+  margin-top: 5px;
+  font-size: 7px;
+  font-weight: 900;
+  letter-spacing: -0.05em;
+  white-space: nowrap;
+}
+
+@media (max-width: 390px) {
+  .gpg-card {
+    padding: 26px 16px 22px;
+  }
+
+  .gpg-title {
+    font-size: 20px;
+  }
+
+  .gpg-row {
+    grid-template-columns: 26px 50px minmax(0, 1fr) 60px;
+    gap: 7px;
+    min-height: 82px;
+  }
+
+  .gpg-avatar-wrap,
+  .gpg-avatar {
+    width: 48px;
+    height: 48px;
+  }
+
+  .gpg-name-area strong {
+    font-size: 16px;
+  }
+
+  .gpg-name-area span {
+    font-size: 9px;
+  }
+
+  .gpg-score strong {
+    font-size: 30px;
+  }
+}
