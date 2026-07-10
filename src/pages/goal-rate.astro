@@ -4,10 +4,14 @@ import "../styles/gpg.css";
 import Header from "../components/Header.astro";
 import BackHome from "../components/BackHome.astro";
 import Footer from "../components/Footer.astro";
-import { getPlayers, getSiteData } from "../lib/players.js";
+import { getPageData } from "../lib/players.js";
 
-const players = await getPlayers();
-const siteData = await getSiteData();
+Astro.response.headers.set(
+  "Cache-Control",
+  "public, s-maxage=30, stale-while-revalidate=60"
+);
+
+const { players, siteData } = await getPageData();
 
 const rateRanking = [...players]
   .filter((player) => player.matches > 0)
@@ -34,7 +38,16 @@ function isLegend(player) {
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <title>GPG | MYSAL STATS</title>
+
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+  <meta
+    name="description"
+    content="マイサルのGOAL PER GAMEランキング。TOP10を掲載しています。"
+  />
 </head>
 
 <body>
@@ -58,19 +71,22 @@ function isLegend(player) {
       <div class="gpg-list">
         {rateRanking.map((player, index) => (
           <a
-  class={`gpg-row ${index === 0 ? "is-first" : ""} rank-${player.rank?.toLowerCase()}`}
-  href={`/player/${player.id}`}
->
+            class={`gpg-row ${index === 0 ? "is-first" : ""} rank-${player.rank?.toLowerCase()}`}
+            href={`/player/${player.id}`}
+          >
             <div class="gpg-rank">
               {index + 1}
             </div>
 
             <div class="gpg-avatar-wrap">
               {index === 0 && <div class="crown">♛</div>}
+
               <img
                 class="gpg-avatar"
                 src={imagePath(player)}
                 alt={player.name}
+                loading={index < 3 ? "eager" : "lazy"}
+                decoding="async"
                 onerror="this.src='/players/placeholder-player.webp'"
               />
             </div>

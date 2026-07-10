@@ -4,9 +4,14 @@ import "../styles/players.css";
 import Header from "../components/Header.astro";
 import BackHome from "../components/BackHome.astro";
 import Footer from "../components/Footer.astro";
-import { getPlayers } from "../lib/players.js";
+import { getPageData } from "../lib/players.js";
 
-const players = await getPlayers();
+Astro.response.headers.set(
+  "Cache-Control",
+  "public, s-maxage=30, stale-while-revalidate=60"
+);
+
+const { players } = await getPageData();
 
 function imagePath(player) {
   return player.photo
@@ -46,7 +51,16 @@ const groups = [
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <title>PLAYER INDEX | MYSAL STATS</title>
+
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+  <meta
+    name="description"
+    content="マイサルの選手名鑑。LEGENDS、MEMBERS、ROOKIESの各選手を掲載しています。"
+  />
 </head>
 
 <body>
@@ -63,7 +77,7 @@ const groups = [
 
     <div class="players-dashed-line"></div>
 
-    {groups.map((group) => (
+    {groups.map((group, groupIndex) => (
       <section class="player-group">
         <div class="player-group-head">
           <div>
@@ -75,12 +89,21 @@ const groups = [
         </div>
 
         <div class="player-index-list">
-          {group.players.map((player) => (
-            <a class={`player-index-row ${rankClass(player)}`} href={`/player/${player.id}`}>
+          {group.players.map((player, playerIndex) => (
+            <a
+              class={`player-index-row ${rankClass(player)}`}
+              href={`/player/${player.id}`}
+            >
               <img
                 class="player-avatar"
                 src={imagePath(player)}
                 alt={player.name}
+                loading={
+                  groupIndex === 0 && playerIndex < 6
+                    ? "eager"
+                    : "lazy"
+                }
+                decoding="async"
                 onerror="this.src='/players/placeholder-player.webp'"
               />
 

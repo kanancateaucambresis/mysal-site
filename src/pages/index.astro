@@ -3,10 +3,14 @@ import "../styles/global.css";
 import "../styles/home.css";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
-import { getPlayers, getSiteData } from "../lib/players.js";
+import { getPageData } from "../lib/players.js";
 
-const players = await getPlayers();
-const siteData = await getSiteData();
+Astro.response.headers.set(
+  "Cache-Control",
+  "public, s-maxage=30, stale-while-revalidate=60"
+);
+
+const { players, siteData } = await getPageData();
 
 const goalRanking = [...players]
   .sort((a, b) => {
@@ -54,143 +58,148 @@ function rankClass(player) {
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
-  <meta name="description" content="マイサル公式選手スタッツ。得点ランキング・GPG・MOMランキング・選手成績を掲載。" />
+  <meta
+    name="description"
+    content="マイサル公式選手スタッツ。得点ランキング・GPG・MOMランキング・選手成績を掲載。"
+  />
   <meta property="og:title" content="MYSAL STATS" />
   <meta property="og:description" content="マイサル公式選手スタッツ" />
   <meta property="og:type" content="website" />
 </head>
 
 <body>
-<main class="container">
+  <main class="container">
 
-  <Header />
+    <Header />
 
-  <section class={`home-mom-card ${rankClass(latestMom)}`}>
-  <div class="home-card-head">
-    <h2>MOM</h2>
+    <section class={`home-mom-card ${rankClass(latestMom)}`}>
+      <div class="home-card-head">
+        <h2>MOM</h2>
 
-    <div class="date-box">
-      <span>LATEST MATCH</span>
-      <strong>{siteData.latestMatch}</strong>
-    </div>
-  </div>
+        <div class="date-box">
+          <span>LATEST MATCH</span>
+          <strong>{siteData.latestMatch}</strong>
+        </div>
+      </div>
 
-  <div class="dot-line"></div>
+      <div class="dot-line"></div>
 
-  <a class="mom-player-row" href={`/player/${latestMom.id}`}>
-    <div class="photo-wrap mom-photo">
-      <span class="crown-above mom-crown">♛</span>
-      <img
-        src={imagePath(latestMom)}
-        alt={latestMom.name}
-        onerror="this.src='/players/placeholder-player.webp'"
-      />
-    </div>
+      <a class="mom-player-row" href={`/player/${latestMom.id}`}>
+        <div class="photo-wrap mom-photo">
+          <span class="crown-above mom-crown">♛</span>
+          <img
+            src={imagePath(latestMom)}
+            alt={latestMom.name}
+            onerror="this.src='/players/placeholder-player.webp'"
+          />
+        </div>
 
-    <div class="mom-name-box">
-      <h3>{latestMom.name}</h3>
-      <p>{latestMom.id} ｜ {latestMom.rank.toUpperCase()}</p>
-    </div>
-  </a>
+        <div class="mom-name-box">
+          <h3>{latestMom.name}</h3>
+          <p>{latestMom.id} ｜ {latestMom.rank.toUpperCase()}</p>
+        </div>
+      </a>
 
-  <a class="outline-button" href="/mom-ranking">
-  VIEW MOM RANKING　&gt;
-</a>
-</section>
+      <a class="outline-button" href="/mom-ranking">
+        VIEW MOM RANKING　&gt;
+      </a>
+    </section>
 
-  <section class="home-board-card">
-    <div class="board-head">
-      <h2>{siteData.displayMonth}</h2>
+    <section class="home-board-card">
+      <div class="board-head">
+        <h2>{siteData.displayMonth}</h2>
 
-      <p class="updated">
-        UPDATED<br />
-        <span>{siteData.updatedDate}</span>
-      </p>
-    </div>
+        <p class="updated">
+          UPDATED<br />
+          <span>{siteData.updatedDate}</span>
+        </p>
+      </div>
 
-    <div class="dot-line"></div>
+      <div class="dot-line"></div>
 
-    <h3 class="board-title">TOP SCORERS</h3>
+      <h3 class="board-title">TOP SCORERS</h3>
 
-    <div class="board-list">
-      {goalRanking.map((player, index) => (
-        <a class={`board-row ${rankClass(player)}`} href={`/player/${player.id}`}>
-          <div class={`board-rank ${player.goals === topGoal ? "is-top" : ""}`}>
-            {String(index + 1).padStart(2, "0")}
-          </div>
+      <div class="board-list">
+        {goalRanking.map((player, index) => (
+          <a class={`board-row ${rankClass(player)}`} href={`/player/${player.id}`}>
+            <div class={`board-rank ${player.goals === topGoal ? "is-top" : ""}`}>
+              {String(index + 1).padStart(2, "0")}
+            </div>
 
-          <div class="photo-wrap small">
-            {player.goals === topGoal && (
-              <span class="crown-above small-crown">♛</span>
-            )}
+            <div class="photo-wrap small">
+              {player.goals === topGoal && (
+                <span class="crown-above small-crown">♛</span>
+              )}
 
-            <img
-              src={imagePath(player)}
-              alt={player.name}
-              onerror="this.src='/players/placeholder-player.webp'"
-            />
-          </div>
+              <img
+                src={imagePath(player)}
+                alt={player.name}
+                loading="lazy"
+                onerror="this.src='/players/placeholder-player.webp'"
+              />
+            </div>
 
-          <div class="board-name">
-            <strong>{player.name}</strong>
-            <span>{player.id} ｜ {player.rank.toUpperCase()}</span>
-          </div>
+            <div class="board-name">
+              <strong>{player.name}</strong>
+              <span>{player.id} ｜ {player.rank.toUpperCase()}</span>
+            </div>
 
-          <div class={`board-score ${player.goals === topGoal ? "is-top" : ""}`}>
-            <strong>{player.goals}</strong>
-            <span>GOALS</span>
-          </div>
-        </a>
-      ))}
-    </div>
+            <div class={`board-score ${player.goals === topGoal ? "is-top" : ""}`}>
+              <strong>{player.goals}</strong>
+              <span>GOALS</span>
+            </div>
+          </a>
+        ))}
+      </div>
 
-    <a class="outline-button board-button" href="/goal-ranking">
-      VIEW　ALL　PLAYERS　&gt;
-    </a>
+      <a class="outline-button board-button" href="/goal-ranking">
+        VIEW　ALL　PLAYERS　&gt;
+      </a>
 
-    <div class="dot-line section-divider"></div>
+      <div class="dot-line section-divider"></div>
 
-    <h3 class="board-title">GOAL PER GAME</h3>
+      <h3 class="board-title">GOAL PER GAME</h3>
 
-    <div class="board-list">
-      {gpgRanking.map((player, index) => (
-        <a class={`board-row ${rankClass(player)}`} href={`/player/${player.id}`}>
-          <div class={`board-rank ${player.rate === topGpg ? "is-top" : ""}`}>
-            {String(index + 1).padStart(2, "0")}
-          </div>
+      <div class="board-list">
+        {gpgRanking.map((player, index) => (
+          <a class={`board-row ${rankClass(player)}`} href={`/player/${player.id}`}>
+            <div class={`board-rank ${player.rate === topGpg ? "is-top" : ""}`}>
+              {String(index + 1).padStart(2, "0")}
+            </div>
 
-          <div class="photo-wrap small">
-            {player.rate === topGpg && (
-              <span class="crown-above small-crown">♛</span>
-            )}
+            <div class="photo-wrap small">
+              {player.rate === topGpg && (
+                <span class="crown-above small-crown">♛</span>
+              )}
 
-            <img
-              src={imagePath(player)}
-              alt={player.name}
-              onerror="this.src='/players/placeholder-player.webp'"
-            />
-          </div>
+              <img
+                src={imagePath(player)}
+                alt={player.name}
+                loading="lazy"
+                onerror="this.src='/players/placeholder-player.webp'"
+              />
+            </div>
 
-          <div class="board-name">
-            <strong>{player.name}</strong>
-            <span>{player.id} ｜ {player.rank.toUpperCase()}</span>
-          </div>
+            <div class="board-name">
+              <strong>{player.name}</strong>
+              <span>{player.id} ｜ {player.rank.toUpperCase()}</span>
+            </div>
 
-          <div class={`board-score ${player.rate === topGpg ? "is-top" : ""}`}>
-            <strong>{player.rate.toFixed(2)}</strong>
-            <span>GPG</span>
-          </div>
-        </a>
-      ))}
-    </div>
+            <div class={`board-score ${player.rate === topGpg ? "is-top" : ""}`}>
+              <strong>{player.rate.toFixed(2)}</strong>
+              <span>GPG</span>
+            </div>
+          </a>
+        ))}
+      </div>
 
-    <a class="outline-button board-button" href="/goal-rate">
-      VIEW　ALL　PLAYERS　&gt;
-    </a>
-  </section>
+      <a class="outline-button board-button" href="/goal-rate">
+        VIEW　ALL　PLAYERS　&gt;
+      </a>
+    </section>
 
-  <Footer />
+    <Footer />
 
-</main>
+  </main>
 </body>
 </html>

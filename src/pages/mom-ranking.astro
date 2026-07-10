@@ -4,10 +4,14 @@ import "../styles/mom.css";
 import Header from "../components/Header.astro";
 import BackHome from "../components/BackHome.astro";
 import Footer from "../components/Footer.astro";
-import { getPlayers, getSiteData } from "../lib/players.js";
+import { getPageData } from "../lib/players.js";
 
-const players = await getPlayers();
-const siteData = await getSiteData();
+Astro.response.headers.set(
+  "Cache-Control",
+  "public, s-maxage=30, stale-while-revalidate=60"
+);
+
+const { players, siteData } = await getPageData();
 
 const momRanking = [...players]
   .filter((player) => player.mom > 0)
@@ -34,7 +38,16 @@ function isLegend(player) {
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <title>MOM RANKING | MYSAL STATS</title>
+
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+  <meta
+    name="description"
+    content="マイサルの歴代MOMランキング。TOP MOM WINNERSを掲載しています。"
+  />
 </head>
 
 <body>
@@ -75,6 +88,8 @@ function isLegend(player) {
               class="mom-avatar"
               src={imagePath(player)}
               alt={player.name}
+              loading={index < 3 ? "eager" : "lazy"}
+              decoding="async"
               onerror="this.src='/players/placeholder-player.webp'"
             />
           </div>
