@@ -13,9 +13,12 @@ function isActive(path, name) {
 }
 ---
 
-<header class="site-header">
+<header class="site-header" transition:persist="mysal-site-header">
 
-  <a href="/" style="width:52px;height:52px;display:flex;align-items:center;justify-content:center;">
+  <a
+    href="/"
+    style="width:52px;height:52px;display:flex;align-items:center;justify-content:center;"
+  >
     <img
       src="/favicon.svg"
       alt="MYSAL"
@@ -30,26 +33,86 @@ function isActive(path, name) {
 
 </header>
 
-<nav class="nav">
+<nav
+  class="nav"
+  data-mysal-nav
+  transition:persist="mysal-main-nav"
+>
 
-  <a class={isActive("/", "home") ? "active" : ""} href="/">
+  <a
+    class={isActive("/", "home") ? "active" : ""}
+    href="/"
+    data-nav-page="home"
+  >
     HOME
   </a>
 
-  <a class={isActive("/goal-ranking", "goals") ? "active" : ""} href="/goal-ranking">
+  <a
+    class={isActive("/goal-ranking", "goals") ? "active" : ""}
+    href="/goal-ranking"
+    data-nav-page="goals"
+  >
     GOALS
   </a>
 
-  <a class={isActive("/goal-rate", "gpg") ? "active" : ""} href="/goal-rate">
+  <a
+    class={isActive("/goal-rate", "gpg") ? "active" : ""}
+    href="/goal-rate"
+    data-nav-page="gpg"
+  >
     GPG
   </a>
 
-  <a class={isActive("/mom-ranking", "mom") ? "active" : ""} href="/mom-ranking">
+  <a
+    class={isActive("/mom-ranking", "mom") ? "active" : ""}
+    href="/mom-ranking"
+    data-nav-page="mom"
+  >
     MOM
   </a>
 
-  <a class={isActive("/players", "players") ? "active" : ""} href="/players">
+  <a
+    class={isActive("/players", "players") ? "active" : ""}
+    href="/players"
+    data-nav-page="players"
+  >
     PLAYERS
   </a>
 
 </nav>
+
+<script>
+  function updateActiveNavigation() {
+    const nav = document.querySelector("[data-mysal-nav]");
+
+    if (!nav) return;
+
+    const pathname = window.location.pathname;
+
+    let activePage = "home";
+
+    if (pathname.startsWith("/goal-ranking")) {
+      activePage = "goals";
+    } else if (pathname.startsWith("/goal-rate")) {
+      activePage = "gpg";
+    } else if (pathname.startsWith("/mom-ranking")) {
+      activePage = "mom";
+    } else if (
+      pathname.startsWith("/players") ||
+      pathname.startsWith("/player/")
+    ) {
+      activePage = "players";
+    }
+
+    nav.querySelectorAll("[data-nav-page]").forEach((link) => {
+      link.classList.toggle(
+        "active",
+        link.getAttribute("data-nav-page") === activePage
+      );
+    });
+  }
+
+  document.addEventListener("astro:page-load", updateActiveNavigation);
+
+  updateActiveNavigation();
+</script>

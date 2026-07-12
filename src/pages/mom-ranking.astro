@@ -4,6 +4,7 @@ import "../styles/mom.css";
 import Header from "../components/Header.astro";
 import BackHome from "../components/BackHome.astro";
 import Footer from "../components/Footer.astro";
+import Layout from "../layouts/Layout.astro";
 import { getPageData } from "../lib/players.js";
 
 Astro.response.headers.set(
@@ -33,87 +34,72 @@ function isLegend(player) {
 }
 ---
 
-<!doctype html>
-<html lang="ja">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<Layout
+  title="MOM RANKING | MYSAL STATS"
+  description="マイサルの歴代MOMランキング。TOP MOM WINNERSを掲載しています。"
+>
+  <main class="container">
 
-  <title>MOM RANKING | MYSAL STATS</title>
+    <Header />
 
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <section class="mom-card">
 
-  <meta
-    name="description"
-    content="マイサルの歴代MOMランキング。TOP MOM WINNERSを掲載しています。"
-  />
-</head>
+      <div class="mom-card-head">
+        <h2>ALL TIME</h2>
 
-<body>
-<main class="container">
-
-  <Header />
-
-  <section class="mom-card">
-
-    <div class="mom-card-head">
-      <h2>ALL TIME</h2>
-
-      <div class="updated">
-        <span>UPDATED</span>
-        <strong>{siteData.updatedDate}</strong>
+        <div class="updated">
+          <span>UPDATED</span>
+          <strong>{siteData.updatedDate}</strong>
+        </div>
       </div>
-    </div>
 
-    <div class="mom-dashed-line"></div>
+      <div class="mom-dashed-line"></div>
 
-    <h1 class="mom-title">TOP MOM WINNERS</h1>
+      <h1 class="mom-title">TOP MOM WINNERS</h1>
 
-    <div class="mom-list">
-      {momRanking.map((player, index) => (
-        <a
-          class={`mom-row ${index === 0 ? "is-first" : ""} rank-${player.rank?.toLowerCase()}`}
-          href={`/player/${player.id}`}
-        >
+      <div class="mom-list">
+        {momRanking.map((player, index) => (
+          <a
+            class={`mom-row ${index === 0 ? "is-first" : ""} rank-${player.rank?.toLowerCase()}`}
+            href={`/player/${player.id}`}
+          >
 
-          <div class="mom-rank">
-            {index + 1}
-          </div>
+            <div class="mom-rank">
+              {index + 1}
+            </div>
 
-          <div class="mom-avatar-wrap">
-            {index === 0 && <div class="crown">♛</div>}
+            <div class="mom-avatar-wrap">
+              {index === 0 && <div class="crown">♛</div>}
 
-            <img
-              class="mom-avatar"
-              src={imagePath(player)}
-              alt={player.name}
-              loading={index < 3 ? "eager" : "lazy"}
-              decoding="async"
-              onerror="this.src='/players/placeholder-player.webp'"
-            />
-          </div>
+              <img
+                class="mom-avatar"
+                src={imagePath(player)}
+                alt={player.name}
+                loading={index < 3 ? "eager" : "lazy"}
+                decoding="async"
+                onerror="this.src='/players/placeholder-player.webp'"
+              />
+            </div>
 
-          <div class="mom-name-area">
-            <strong>{player.name}</strong>
-            <span>{player.id} | {player.rank.toUpperCase()}</span>
-          </div>
+            <div class="mom-name-area">
+              <strong>{player.name}</strong>
+              <span>{player.id} | {player.rank.toUpperCase()}</span>
+            </div>
 
-          <div class="mom-score">
-            <strong>{player.mom}</strong>
-            {index === 0 && <span>TIMES</span>}
-          </div>
+            <div class="mom-score">
+              <strong>{player.mom}</strong>
+              {index === 0 && <span>TIMES</span>}
+            </div>
 
-        </a>
-      ))}
-    </div>
+          </a>
+        ))}
+      </div>
 
-  </section>
+    </section>
 
-  <BackHome />
+    <BackHome />
 
-  <Footer />
+    <Footer />
 
-</main>
-</body>
-</html>
+  </main>
+</Layout>

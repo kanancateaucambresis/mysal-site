@@ -3,6 +3,7 @@ import "../../styles/global.css";
 import "../../styles/player.css";
 import Header from "../../components/Header.astro";
 import Footer from "../../components/Footer.astro";
+import Layout from "../../layouts/Layout.astro";
 import { getPageData } from "../../lib/players.js";
 
 Astro.response.headers.set(
@@ -51,7 +52,11 @@ function rankSuffix(rank) {
 }
 
 const goalRank = getRank(players, player, "goals");
-const gpgRank = getRank(players.filter((p) => p.matches > 0), player, "rate");
+const gpgRank = getRank(
+  players.filter((p) => p.matches > 0),
+  player,
+  "rate"
+);
 const appearanceRank = getRank(players, player, "total");
 const momRank = getRank(players, player, "mom");
 
@@ -65,125 +70,110 @@ const bestRecords = [
 const bestRecord = bestRecords.sort((a, b) => a.rank - b.rank)[0];
 ---
 
-<!doctype html>
-<html lang="ja">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<Layout
+  title={`${player.name} | MYSAL STATS`}
+  description={`${player.name}のマイサル公式スタッツページ`}
+>
+  <main class="container">
 
-  <title>{player.name} | MYSAL STATS</title>
+    <Header active="players" />
 
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <section class={`player-profile-card ${rankClass(player)}`}>
+      <div class="profile-center">
 
-  <meta
-    name="description"
-    content={`${player.name}のマイサル公式スタッツページ`}
-  />
-</head>
+        <img
+          class="profile-avatar"
+          src={imagePath(player)}
+          alt={player.name}
+          decoding="async"
+          fetchpriority="high"
+          onerror="this.src='/players/placeholder-player.webp'"
+        />
 
-<body>
-<main class="container">
+        <h1>{player.name}</h1>
 
-  <Header active="players" />
+        <p class="profile-meta">
+          {player.id} | {player.rank.toUpperCase()}
+        </p>
 
-  <section class={`player-profile-card ${rankClass(player)}`}>
-    <div class="profile-center">
+        <div class="profile-divider"></div>
 
-      <img
-        class="profile-avatar"
-        src={imagePath(player)}
-        alt={player.name}
-        decoding="async"
-        fetchpriority="high"
-        onerror="this.src='/players/placeholder-player.webp'"
-      />
+        <span class="best-label">BEST RECORD</span>
 
-      <h1>{player.name}</h1>
+        <div class="best-rank">
+          {rankSuffix(bestRecord.rank)}
+        </div>
 
-      <p class="profile-meta">
-        {player.id} | {player.rank.toUpperCase()}
-      </p>
+        <div class="best-category">
+          {bestRecord.label}
+        </div>
+      </div>
+    </section>
 
-      <div class="profile-divider"></div>
+    <section class="player-stats-card">
+      <div class="stats-card-head">
+        <div>
+          <h2>MONTHLY</h2>
+          <p>{siteData.displayMonth}</p>
+        </div>
 
-      <span class="best-label">BEST RECORD</span>
-
-      <div class="best-rank">
-        {rankSuffix(bestRecord.rank)}
+        <span>
+          UPDATED<br />
+          {siteData.updatedDate}
+        </span>
       </div>
 
-      <div class="best-category">
-        {bestRecord.label}
+      <div class="stats-grid">
+        <div class="stat-card">
+          <span class="stat-label">GOALS</span>
+          <div class="stat-value">{player.goals}</div>
+          <div class="stat-rank">
+            RANK {player.goals > 0 ? goalRank : "-"} / {totalPlayers}
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <span class="stat-label">GPG</span>
+          <div class="stat-value">{player.rate.toFixed(2)}</div>
+          <div class="stat-rank">
+            RANK {gpgRank} / {totalPlayers}
+          </div>
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <section class="player-stats-card">
-    <div class="stats-card-head">
-      <div>
-        <h2>MONTHLY</h2>
-        <p>{siteData.displayMonth}</p>
-      </div>
-
-      <span>
-        UPDATED<br />
-        {siteData.updatedDate}
-      </span>
-    </div>
-
-    <div class="stats-grid">
-      <div class="stat-card">
-        <span class="stat-label">GOALS</span>
-        <div class="stat-value">{player.goals}</div>
-        <div class="stat-rank">
-          RANK {player.goals > 0 ? goalRank : "-"} / {totalPlayers}
+    <section class="player-stats-card">
+      <div class="stats-card-head">
+        <div>
+          <h2>ALL TIME</h2>
+          <p>CAREER RECORDS</p>
         </div>
       </div>
 
-      <div class="stat-card">
-        <span class="stat-label">GPG</span>
-        <div class="stat-value">{player.rate.toFixed(2)}</div>
-        <div class="stat-rank">
-          RANK {gpgRank} / {totalPlayers}
+      <div class="stats-grid">
+        <div class="stat-card">
+          <span class="stat-label">APPEARANCES</span>
+          <div class="stat-value">{player.total}</div>
+          <div class="stat-rank">
+            RANK {appearanceRank} / {totalPlayers}
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <span class="stat-label">MOM</span>
+          <div class="stat-value">{player.mom}</div>
+          <div class="stat-rank">
+            RANK {player.mom > 0 ? momRank : "-"} / {totalPlayers}
+          </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <section class="player-stats-card">
-    <div class="stats-card-head">
-      <div>
-        <h2>ALL TIME</h2>
-        <p>CAREER RECORDS</p>
-      </div>
+    <div class="back-home">
+      <a href="/players">PLAYER INDEX</a>
     </div>
 
-    <div class="stats-grid">
-      <div class="stat-card">
-        <span class="stat-label">APPEARANCES</span>
-        <div class="stat-value">{player.total}</div>
-        <div class="stat-rank">
-          RANK {appearanceRank} / {totalPlayers}
-        </div>
-      </div>
+    <Footer />
 
-      <div class="stat-card">
-        <span class="stat-label">MOM</span>
-        <div class="stat-value">{player.mom}</div>
-        <div class="stat-rank">
-          RANK {player.mom > 0 ? momRank : "-"} / {totalPlayers}
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <div class="back-home">
-    <a href="/players">PLAYER INDEX</a>
-  </div>
-
-  <Footer />
-
-</main>
-</body>
-</html>
+  </main>
+</Layout>

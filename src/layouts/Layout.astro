@@ -1,8 +1,24 @@
+---
+import { ClientRouter } from "astro:transitions";
+
+interface Props {
+	title?: string;
+	description?: string;
+}
+
+const {
+	title = "MYSAL STATS | PLAYER STATISTICS",
+	description = "マイサル公式選手スタッツ。得点ランキング・得点率・MOMランキング・選手成績を掲載。",
+} = Astro.props;
+---
+
 <!doctype html>
 <html lang="ja">
 	<head>
 		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+		<ClientRouter />
 
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="icon" href="/favicon.ico" />
@@ -10,11 +26,11 @@
 
 		<meta name="generator" content={Astro.generator} />
 
-		<title>MYSAL STATS | PLAYER STATISTICS</title>
+		<title>{title}</title>
 
 		<meta
 			name="description"
-			content="マイサル公式選手スタッツ。得点ランキング・得点率・MOMランキング・選手成績を掲載。"
+			content={description}
 		/>
 
 		<meta property="og:title" content="MYSAL STATS" />
@@ -35,6 +51,6 @@
 	body {
 		margin: 0;
 		width: 100%;
-		height: 100%;
+		min-height: 100%;
 	}
 </style>

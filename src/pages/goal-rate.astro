@@ -4,6 +4,7 @@ import "../styles/gpg.css";
 import Header from "../components/Header.astro";
 import BackHome from "../components/BackHome.astro";
 import Footer from "../components/Footer.astro";
+import Layout from "../layouts/Layout.astro";
 import { getPageData } from "../lib/players.js";
 
 Astro.response.headers.set(
@@ -33,24 +34,10 @@ function isLegend(player) {
 }
 ---
 
-<!doctype html>
-<html lang="ja">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <title>GPG | MYSAL STATS</title>
-
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-
-  <meta
-    name="description"
-    content="マイサルのGOAL PER GAMEランキング。TOP10を掲載しています。"
-  />
-</head>
-
-<body>
+<Layout
+  title="GPG | MYSAL STATS"
+  description="マイサルのGOAL PER GAMEランキング。TOP10を掲載しています。"
+>
   <main class="container">
     <Header />
 
@@ -109,5 +96,4 @@ function isLegend(player) {
 
     <Footer />
   </main>
-</body>
-</html>
+</Layout>
